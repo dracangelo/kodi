@@ -6,205 +6,220 @@
 <div class="max-w-7xl mx-auto">
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
         <div>
-            <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Financial Overview</h2>
+            <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Dashboard Overview</h2>
             <p class="text-slate-500 mt-1">Manage your properties and track collections in real-time.</p>
         </div>
         <div class="flex items-center bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm">
-            <button class="px-4 py-2 text-sm font-bold bg-indigo-50 text-indigo-600 rounded-xl">Last 30 Days</button>
-            <button
-                class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Quarterly</button>
-            <button
-                class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Yearly</button>
+            <button class="px-4 py-2 text-sm font-bold bg-indigo-50 text-indigo-600 rounded-xl">This Month</button>
+            <button class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Last Month</button>
         </div>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-        <div
-            class="bg-white p-8 rounded-[2rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div
-                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-50 rounded-full transition-transform group-hover:scale-150 duration-500">
-            </div>
+    <!-- Top Row KPIs (6 Cards) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <!-- Net Profit -->
+        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
             <div class="relative">
-                <div class="flex items-center justify-between mb-6">
-                    <div
-                        class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/30">
-                        <i class="fas fa-money-bill-wave text-xl"></i>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-600/30">
+                        <i class="fas fa-chart-line"></i>
                     </div>
-                    <span
-                        class="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg uppercase tracking-wider">Revenue</span>
+                    <span class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg uppercase tracking-wider">KPI</span>
                 </div>
-                <div class="text-3xl font-extrabold text-slate-900 tracking-tight">${{ total_rent_collected|default:"0.00" }}</div>
-                <div class="text-sm font-medium text-indigo-600 mt-1 uppercase tracking-wide">Rent Collected</div>
-                <div class="text-xs text-emerald-500 mt-4 flex items-center font-bold">
-                    <div class="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center mr-2">
-                        <i class="fas fa-caret-up"></i>
-                    </div>
-                    12.5% increase
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">${{ curr_net_profit|default:"0.00" }}</div>
+                <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Net Profit (This Month)</div>
+                <div class="text-[10px] {% if profit_trend >= 0 %}text-emerald-500 bg-emerald-50{% else %}text-rose-500 bg-rose-50{% endif %} mt-3 inline-flex items-center font-bold px-2 py-1 rounded-md">
+                    <i class="fas {% if profit_trend >= 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %} mr-1"></i>
+                    {{ profit_trend }}% from last month
                 </div>
             </div>
         </div>
 
-        <div
-            class="bg-white p-8 rounded-[2rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div
-                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-rose-50 rounded-full transition-transform group-hover:scale-150 duration-500">
-            </div>
+        <!-- Payments Made -->
+        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
             <div class="relative">
-                <div class="flex items-center justify-between mb-6">
-                    <div
-                        class="w-12 h-12 bg-rose-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-rose-500/30">
-                        <i class="fas fa-file-invoice text-xl"></i>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/30">
+                        <i class="fas fa-money-bill-wave"></i>
                     </div>
-                    <span
-                        class="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg uppercase tracking-wider">Costs</span>
                 </div>
-                <div class="text-3xl font-extrabold text-slate-900 tracking-tight">${{ total_expenses|default:"0.00" }}
-                </div>
-                <div class="text-sm font-medium text-rose-500 mt-1 uppercase tracking-wide">Total Expenses</div>
-                <div class="text-xs text-rose-500 mt-4 flex items-center font-bold">
-                    <div class="w-5 h-5 rounded-full bg-rose-50 flex items-center justify-center mr-2">
-                        <i class="fas fa-caret-up"></i>
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">${{ curr_month_revenue|default:"0.00" }}</div>
+                <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Payments Made</div>
+            </div>
+        </div>
+
+        <!-- Pending Bills -->
+        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-amber-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
+                        <i class="fas fa-clock"></i>
                     </div>
-                    5.2% increase
+                </div>
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">${{ outstanding_rent|default:"0.00" }}</div>
+                <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Pending Bills</div>
+            </div>
+        </div>
+
+        <!-- Occupancy % -->
+        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 {% if occupancy_rate > 85 %}bg-emerald-50{% elif occupancy_rate > 70 %}bg-amber-50{% else %}bg-rose-50{% endif %} rounded-full transition-transform group-hover:scale-150 duration-500"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-10 h-10 {% if occupancy_rate > 85 %}bg-emerald-600 shadow-emerald-600/30{% elif occupancy_rate > 70 %}bg-amber-500 shadow-amber-500/30{% else %}bg-rose-600 shadow-rose-600/30{% endif %} rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <i class="fas fa-home"></i>
+                    </div>
+                </div>
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ occupancy_rate|default:"0" }}%</div>
+                <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Occupancy Rate</div>
+                <div class="text-[10px] text-slate-500 font-bold mt-2">
+                    {{ occupied_units }} / {{ total_units }} Units Occupied
                 </div>
             </div>
         </div>
 
-        <div
-            class="bg-white p-8 rounded-[2rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div
-                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-50 rounded-full transition-transform group-hover:scale-150 duration-500">
-            </div>
+        <!-- Properties -->
+        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
             <div class="relative">
-                <div class="flex items-center justify-between mb-6">
-                    <div
-                        class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
-                        <i class="fas fa-wallet text-xl"></i>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/30">
+                        <i class="fas fa-building"></i>
                     </div>
-                    <span
-                        class="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg uppercase tracking-wider">Profit</span>
                 </div>
-                <div class="text-3xl font-extrabold text-slate-900 tracking-tight">${{ net_income|default:"0.00" }}
-                </div>
-                <div class="text-sm font-medium text-emerald-600 mt-1 uppercase tracking-wide">Net Income</div>
-                <div class="text-xs text-emerald-500 mt-4 flex items-center font-bold">
-                    <div class="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center mr-2">
-                        <i class="fas fa-caret-up"></i>
-                    </div>
-                    8.1% increase
-                </div>
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ total_properties|default:"0" }}</div>
+                <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Total Properties</div>
             </div>
         </div>
 
-        <div
-            class="bg-white p-8 rounded-[2rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div
-                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-amber-50 rounded-full transition-transform group-hover:scale-150 duration-500">
-            </div>
+        <!-- Active Tenants -->
+        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-violet-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
             <div class="relative">
-                <div class="flex items-center justify-between mb-6">
-                    <div
-                        class="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
-                        <i class="fas fa-clock text-xl"></i>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-violet-600/30">
+                        <i class="fas fa-users"></i>
                     </div>
-                    <span
-                        class="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg uppercase tracking-wider">Pending</span>
                 </div>
-                <div class="text-3xl font-extrabold text-slate-900 tracking-tight">${{ outstanding_rent|default:"0.00" }}</div>
-                <div class="text-sm font-medium text-amber-600 mt-1 uppercase tracking-wide">Outstanding</div>
-                <div class="text-xs text-amber-600 mt-4 flex items-center font-bold">
-                    <div class="w-5 h-5 rounded-full bg-amber-50 flex items-center justify-center mr-2">
-                        <i class="fas fa-exclamation-circle text-xs"></i>
-                    </div>
-                    3 Overdue Tenants
-                </div>
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ occupied_units|default:"0" }}</div>
+                <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Active Tenants</div>
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <!-- Property Status -->
-        <div class="lg:col-span-2 bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 relative">
-            <div class="flex items-center justify-between mb-10">
-                <h3 class="text-2xl font-bold text-slate-900 tracking-tight">Property Performance</h3>
-                <button
-                    class="text-indigo-600 font-bold text-sm flex items-center hover:text-indigo-700 transition-colors">
+    <!-- Second Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <!-- Financial Trend Chart (Placeholder for now) -->
+        <div class="lg:col-span-2 bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 relative">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight">Property Performance</h3>
+                <button class="text-indigo-600 font-bold text-sm flex items-center hover:text-indigo-700 transition-colors">
                     View Report <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </div>
-            <div class="space-y-10">
-                <div>
-                    <div class="flex items-end justify-between mb-3">
-                        <div class="text-sm font-bold text-slate-400 uppercase tracking-widest">Global Occupancy Rate
-                        </div>
-                        <div class="text-4xl font-extrabold text-slate-900 tracking-tighter">{{ occupancy_rate|default:"0" }}%</div>
-                    </div>
-                    <div class="w-full bg-slate-100 rounded-full h-5 p-1 relative shadow-inner">
-                        <div class="bg-gradient-to-r from-indigo-600 to-violet-600 h-3 rounded-full shadow-lg shadow-indigo-600/20"
-                            style="width: {{ occupancy_rate|default:0 }}%"></div>
-                    </div>
-                </div>
+            <div class="h-48 flex items-center justify-center bg-slate-50 rounded-xl border border-slate-100">
+                <p class="text-slate-400 font-medium italic">Financial Trend Chart</p>
+            </div>
+        </div>
 
-                <div class="grid grid-cols-3 gap-10 border-t border-slate-100 pt-10">
-                    <div class="space-y-1">
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Properties</div>
-                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ total_properties|default:"0" }}</div>
+        <!-- Action Required Panel -->
+        <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight text-rose-600">Action Required</h3>
+            </div>
+            <div class="flex-1 space-y-3">
+                <a href="#" class="flex items-center group p-3 rounded-2xl bg-rose-50 hover:bg-rose-100 transition-colors border border-rose-100 cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-white text-rose-500 flex items-center justify-center mr-3 shadow-sm">
+                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
-                    <div class="space-y-1">
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Units</div>
-                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ total_units|default:"0" }}
-                        </div>
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-rose-700">{{ overdue_tenants_count|default:"0" }} Tenants Overdue</div>
+                        <div class="text-[10px] text-rose-500 uppercase font-bold tracking-wider">Follow up required</div>
                     </div>
-                    <div class="space-y-1">
-                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Occupied</div>
-                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight text-indigo-600">{{ occupied_units|default:"0" }}</div>
+                </a>
+                
+                <a href="#" class="flex items-center group p-3 rounded-2xl bg-orange-50 hover:bg-orange-100 transition-colors border border-orange-100 cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-white text-orange-500 flex items-center justify-center mr-3 shadow-sm">
+                        <i class="fas fa-file-signature"></i>
                     </div>
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-orange-700">{{ expiring_leases_count|default:"0" }} Leases Expiring</div>
+                        <div class="text-[10px] text-orange-500 uppercase font-bold tracking-wider">Next 30 days</div>
+                    </div>
+                </a>
+
+                <a href="#" class="flex items-center group p-3 rounded-2xl bg-amber-50 hover:bg-amber-100 transition-colors border border-amber-100 cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-white text-amber-500 flex items-center justify-center mr-3 shadow-sm">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-amber-700">{{ urgent_tickets_count|default:"0" }} Urgent Tickets</div>
+                        <div class="text-[10px] text-amber-500 uppercase font-bold tracking-wider">Maintenance</div>
+                    </div>
+                </a>
+
+                <a href="#" class="flex items-center group p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors border border-slate-200 cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-white text-slate-500 flex items-center justify-center mr-3 shadow-sm">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-slate-700">{{ vacant_units_count|default:"0" }} Vacant Units</div>
+                        <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Ready for lease</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Visitors Block -->
+        <div class="lg:col-span-2 bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
+            <h3 class="text-xl font-bold text-slate-900 tracking-tight mb-6">Visitor Traffic</h3>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-indigo-50/50 p-6 rounded-3xl border border-indigo-50">
+                    <div class="text-indigo-500 mb-2"><i class="fas fa-users text-2xl"></i></div>
+                    <div class="text-3xl font-extrabold text-slate-900">{{ visitors_today|default:"0" }}</div>
+                    <div class="text-xs font-bold text-indigo-600 uppercase tracking-widest mt-1">Visitors Today</div>
+                </div>
+                <div class="bg-emerald-50/50 p-6 rounded-3xl border border-emerald-50">
+                    <div class="text-emerald-500 mb-2"><i class="fas fa-id-badge text-2xl"></i></div>
+                    <div class="text-3xl font-extrabold text-slate-900">{{ currently_checked_in|default:"0" }}</div>
+                    <div class="text-xs font-bold text-emerald-600 uppercase tracking-widest mt-1">Currently Checked In</div>
                 </div>
             </div>
         </div>
 
-        <!-- Recent Maintenance -->
-        <div class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="text-2xl font-bold text-slate-900 tracking-tight">Support</h3>
-                <span
-                    class="bg-rose-100 text-rose-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest outline outline-2 outline-rose-50 outline-offset-2">{{urgent_tickets_count|default:"0" }} Emergency</span>
+        <!-- Quick Actions Panel -->
+        <div class="bg-slate-900 p-8 rounded-[2rem] shadow-md border border-slate-800 text-white flex flex-col">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold tracking-tight">Quick Actions</h3>
             </div>
-            <div class="flex-1 space-y-4">
-                {% for ticket in recent_tickets %}
-                <div
-                    class="flex items-center group p-4 rounded-3xl hover:bg-slate-50 transition-all cursor-pointer ring-1 ring-transparent hover:ring-slate-200/50">
-                    <div class="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center mr-4 
-                        {% if ticket.priority == 'emergency' %}bg-rose-50 text-rose-500
-                        {% elif ticket.priority == 'high' %}bg-amber-50 text-amber-500
-                        {% else %}bg-indigo-50 text-indigo-500{% endif %}">
-                        <i class="fas fa-tools text-lg"></i>
-                    </div>
-                    <div class="flex-1 overflow-hidden">
-                        <div
-                            class="text-sm font-bold text-slate-900 truncate group-hover:text-indigo-600 transition-colors">
-                            {{ ticket.category }}</div>
-                        <div class="text-xs text-slate-500 font-medium">Unit {{ ticket.unit.unit_number }} • {{
-                            ticket.created_at|timesince }}</div>
-                    </div>
-                    <div class="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-indigo-500 transition-colors">
-                    </div>
-                </div>
-                {% empty %}
-                <div class="flex flex-col items-center justify-center py-20 text-center">
-                    <div
-                        class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mb-4">
-                        <i class="fas fa-check-circle text-2xl"></i>
-                    </div>
-                    <p class="text-sm text-slate-500 font-medium italic">Everything stable. No open tickets.</p>
-                </div>
-                {% endfor %}
+            <div class="grid grid-cols-2 gap-3 flex-1">
+                <a href="{% url 'tenant_create' %}" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
+                    <i class="fas fa-user-plus text-indigo-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-bold">Add Tenant</span>
+                </a>
+                <a href="{% url 'payment_create' %}" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
+                    <i class="fas fa-hand-holding-usd text-emerald-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-bold">Record Payment</span>
+                </a>
+                <a href="#" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
+                    <i class="fas fa-tools text-amber-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-bold">Create Ticket</span>
+                </a>
+                <a href="#" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
+                    <i class="fas fa-receipt text-rose-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-bold">Add Expense</span>
+                </a>
+                <a href="#" class="col-span-2 bg-indigo-600 hover:bg-indigo-500 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer shadow-lg shadow-indigo-600/20">
+                    <i class="fas fa-home text-white text-xl mb-2 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-bold">Add Unit</span>
+                </a>
             </div>
-            <a href="#"
-                class="mt-8 py-4 w-full text-center text-sm font-bold text-slate-900 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200 transition-all">
-                Access Maintenance Center
-            </a>
         </div>
     </div>
 </div>

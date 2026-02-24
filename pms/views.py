@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Sum, Count, Q
-from .models import Property, Unit, Tenant, Lease, Payment, Expense, MaintenanceTicket
+from .models import Property, Unit, Tenant, Lease, Payment, Expense, MaintenanceTicket, Visitor
 from django import forms
 
 from django.utils import timezone
