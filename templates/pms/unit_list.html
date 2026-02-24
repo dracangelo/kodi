@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Units - Kodi{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+        <div>
+            <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Units</h2>
+            <p class="text-slate-500 mt-1">
+                Overview of all units across your properties{% if request.GET.filter == 'long_vacant' %} (vacant 30+ days){% endif %}.
+            </p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-slate-50/50 text-slate-400 text-xs font-black uppercase tracking-widest">
+                    <th class="px-8 py-5">Unit</th>
+                    <th class="px-8 py-5">Property</th>
+                    <th class="px-8 py-5">Type</th>
+                    <th class="px-8 py-5">Rent</th>
+                    <th class="px-8 py-5">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                {% for unit in units %}
+                <tr class="group hover:bg-slate-50/50 transition-all">
+                    <td class="px-8 py-6">
+                        <div class="text-sm font-bold text-slate-900">{{ unit.unit_number }}</div>
+                        <div class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-0.5">
+                            Meter W: {{ unit.water_meter|default:"-" }} · E: {{ unit.electricity_meter|default:"-" }}
+                        </div>
+                    </td>
+                    <td class="px-8 py-6">
+                        <div class="text-sm font-medium text-slate-700 leading-relaxed">{{ unit.property.name }}</div>
+                    </td>
+                    <td class="px-8 py-6">
+                        <span
+                            class="px-3 py-1.5 bg-slate-100 rounded-xl text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                            {{ unit.get_unit_type_display }}
+                        </span>
+                    </td>
+                    <td class="px-8 py-6">
+                        <div class="text-lg font-black text-slate-900 tracking-tighter">${{ unit.rent_amount }}</div>
+                    </td>
+                    <td class="px-8 py-6">
+                        <span class="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest
+                            {% if unit.status == 'occupied' %}bg-emerald-50 text-emerald-600 shadow-sm shadow-emerald-100
+                            {% elif unit.status == 'vacant' %}bg-slate-100 text-slate-500
+                            {% else %}bg-amber-50 text-amber-600 shadow-sm shadow-amber-100{% endif %}">
+                            {{ unit.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-8 py-20 text-center">
+                        <div
+                            class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-200 mb-4 mx-auto">
+                            <i class="fas fa-door-open text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 italic">No units found</h3>
+                        <p class="text-slate-400 text-sm">Add units under a property to see them here.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

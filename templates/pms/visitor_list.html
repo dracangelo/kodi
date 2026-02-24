@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Visitors - Kodi{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+        <div>
+            <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Visitors</h2>
+            <p class="text-slate-500 mt-1">
+                Entry and exit log for all visitors.
+            </p>
+        </div>
+        <a href="{% url 'visitor_create' %}"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-indigo-600/20 hover:-translate-y-0.5 transition-all flex items-center justify-center">
+            <i class="fas fa-user-plus mr-2"></i> Add Visitor
+        </a>
+    </div>
+
+    <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-slate-50/50 text-slate-400 text-xs font-black uppercase tracking-widest">
+                    <th class="px-8 py-5">Visitor</th>
+                    <th class="px-8 py-5">Contact</th>
+                    <th class="px-8 py-5">Unit Visiting</th>
+                    <th class="px-8 py-5">Vehicle</th>
+                    <th class="px-8 py-5">Time</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                {% for visitor in visitors %}
+                <tr class="group hover:bg-slate-50/50 transition-all">
+                    <td class="px-8 py-6">
+                        <div class="text-sm font-bold text-slate-900">{{ visitor.name }}</div>
+                        <div class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-0.5">
+                            ID {{ visitor.id_number|default:"-" }}
+                        </div>
+                    </td>
+                    <td class="px-8 py-6">
+                        <div class="text-sm font-medium text-slate-700 leading-relaxed">{{ visitor.phone }}</div>
+                    </td>
+                    <td class="px-8 py-6">
+                        <div class="text-sm font-medium text-slate-700 leading-relaxed">
+                            {{ visitor.unit_visiting.property.name }}
+                        </div>
+                        <div class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-0.5">
+                            Unit {{ visitor.unit_visiting.unit_number }}
+                        </div>
+                    </td>
+                    <td class="px-8 py-6">
+                        <div class="text-sm font-medium text-slate-700 leading-relaxed">
+                            {{ visitor.vehicle_plate|default:"-" }}
+                        </div>
+                        <div class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-0.5">
+                            Guard: {{ visitor.security_guard_name|default:"-" }}
+                        </div>
+                    </td>
+                    <td class="px-8 py-6">
+                        <div class="text-sm font-medium text-slate-600">
+                            In: {{ visitor.entry_time|date:"M d, Y H:i" }}
+                        </div>
+                        <div class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-0.5">
+                            Out:
+                            {% if visitor.exit_time %}
+                            {{ visitor.exit_time|date:"M d, Y H:i" }}
+                            {% else %}
+                            Still inside
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-8 py-20 text-center">
+                        <div
+                            class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-200 mb-4 mx-auto">
+                            <i class="fas fa-user-secret text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 italic">No visitors recorded</h3>
+                        <p class="text-slate-400 text-sm">New visitor entries will show up here.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

@@ -11,25 +11,34 @@
         </div>
         <div class="flex items-center bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm">
             <button class="px-4 py-2 text-sm font-bold bg-indigo-50 text-indigo-600 rounded-xl">This Month</button>
-            <button class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Last Month</button>
+            <button class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Last
+                Month</button>
         </div>
     </div>
 
     <!-- Top Row KPIs (6 Cards) -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         <!-- Net Profit -->
-        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
+        <div
+            class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div
+                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-50 rounded-full transition-transform group-hover:scale-150 duration-500">
+            </div>
             <div class="relative">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-600/30">
+                    <div
+                        class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-600/30">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <span class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg uppercase tracking-wider">KPI</span>
+                    <span
+                        class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg uppercase tracking-wider">KPI</span>
                 </div>
-                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">${{ curr_net_profit|default:"0.00" }}</div>
-                <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Net Profit (This Month)</div>
-                <div class="text-[10px] {% if profit_trend >= 0 %}text-emerald-500 bg-emerald-50{% else %}text-rose-500 bg-rose-50{% endif %} mt-3 inline-flex items-center font-bold px-2 py-1 rounded-md">
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">${{ curr_net_profit|default:"0.00" }}
+                </div>
+                <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Net Profit (This Month)
+                </div>
+                <div
+                    class="text-[10px] {% if profit_trend >= 0 %}text-emerald-500 bg-emerald-50{% else %}text-rose-500 bg-rose-50{% endif %} mt-3 inline-flex items-center font-bold px-2 py-1 rounded-md">
                     <i class="fas {% if profit_trend >= 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %} mr-1"></i>
                     {{ profit_trend }}% from last month
                 </div>
@@ -37,11 +46,15 @@
         </div>
 
         <!-- Payments Made -->
-        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
+        <div
+            class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div
+                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-50 rounded-full transition-transform group-hover:scale-150 duration-500">
+            </div>
             <div class="relative">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/30">
+                    <div
+                        class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/30">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
                 </div>
@@ -51,11 +64,15 @@
         </div>
 
         <!-- Pending Bills -->
-        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-amber-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
+        <div
+            class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div
+                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-amber-50 rounded-full transition-transform group-hover:scale-150 duration-500">
+            </div>
             <div class="relative">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
+                    <div
+                        class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-amber-500/30">
                         <i class="fas fa-clock"></i>
                     </div>
                 </div>
@@ -65,15 +82,20 @@
         </div>
 
         <!-- Occupancy % -->
-        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 {% if occupancy_rate > 85 %}bg-emerald-50{% elif occupancy_rate > 70 %}bg-amber-50{% else %}bg-rose-50{% endif %} rounded-full transition-transform group-hover:scale-150 duration-500"></div>
+        <div
+            class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div
+                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 {% if occupancy_rate > 85 %}bg-emerald-50{% elif occupancy_rate > 70 %}bg-amber-50{% else %}bg-rose-50{% endif %} rounded-full transition-transform group-hover:scale-150 duration-500">
+            </div>
             <div class="relative">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 {% if occupancy_rate > 85 %}bg-emerald-600 shadow-emerald-600/30{% elif occupancy_rate > 70 %}bg-amber-500 shadow-amber-500/30{% else %}bg-rose-600 shadow-rose-600/30{% endif %} rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <div
+                        class="w-10 h-10 {% if occupancy_rate > 85 %}bg-emerald-600 shadow-emerald-600/30{% elif occupancy_rate > 70 %}bg-amber-500 shadow-amber-500/30{% else %}bg-rose-600 shadow-rose-600/30{% endif %} rounded-xl flex items-center justify-center text-white shadow-lg">
                         <i class="fas fa-home"></i>
                     </div>
                 </div>
-                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ occupancy_rate|default:"0" }}%</div>
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ occupancy_rate|default:"0" }}%
+                </div>
                 <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Occupancy Rate</div>
                 <div class="text-[10px] text-slate-500 font-bold mt-2">
                     {{ occupied_units }} / {{ total_units }} Units Occupied
@@ -82,29 +104,39 @@
         </div>
 
         <!-- Properties -->
-        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
+        <div
+            class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div
+                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-50 rounded-full transition-transform group-hover:scale-150 duration-500">
+            </div>
             <div class="relative">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/30">
+                    <div
+                        class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/30">
                         <i class="fas fa-building"></i>
                     </div>
                 </div>
-                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ total_properties|default:"0" }}</div>
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ total_properties|default:"0" }}
+                </div>
                 <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Total Properties</div>
             </div>
         </div>
 
         <!-- Active Tenants -->
-        <div class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
-            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-violet-50 rounded-full transition-transform group-hover:scale-150 duration-500"></div>
+        <div
+            class="bg-white p-6 rounded-[1.5rem] shadow-sm hover-lift border border-slate-100 relative overflow-hidden group">
+            <div
+                class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-violet-50 rounded-full transition-transform group-hover:scale-150 duration-500">
+            </div>
             <div class="relative">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-violet-600/30">
+                    <div
+                        class="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-violet-600/30">
                         <i class="fas fa-users"></i>
                     </div>
                 </div>
-                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ occupied_units|default:"0" }}</div>
+                <div class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ occupied_units|default:"0" }}
+                </div>
                 <div class="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wide">Active Tenants</div>
             </div>
         </div>
@@ -116,7 +148,8 @@
         <div class="lg:col-span-2 bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 relative">
             <div class="flex items-center justify-between mb-8">
                 <h3 class="text-xl font-bold text-slate-900 tracking-tight">Property Performance</h3>
-                <button class="text-indigo-600 font-bold text-sm flex items-center hover:text-indigo-700 transition-colors">
+                <button
+                    class="text-indigo-600 font-bold text-sm flex items-center hover:text-indigo-700 transition-colors">
                     View Report <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </div>
@@ -131,43 +164,56 @@
                 <h3 class="text-xl font-bold text-slate-900 tracking-tight text-rose-600">Action Required</h3>
             </div>
             <div class="flex-1 space-y-3">
-                <a href="#" class="flex items-center group p-3 rounded-2xl bg-rose-50 hover:bg-rose-100 transition-colors border border-rose-100 cursor-pointer">
-                    <div class="w-10 h-10 rounded-xl bg-white text-rose-500 flex items-center justify-center mr-3 shadow-sm">
+                <a href="{% url 'tenant_list' %}?filter=overdue"
+                    class="flex items-center group p-3 rounded-2xl bg-rose-50 hover:bg-rose-100 transition-colors border border-rose-100 cursor-pointer">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-white text-rose-500 flex items-center justify-center mr-3 shadow-sm">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div class="flex-1">
-                        <div class="text-sm font-bold text-rose-700">{{ overdue_tenants_count|default:"0" }} Tenants Overdue</div>
-                        <div class="text-[10px] text-rose-500 uppercase font-bold tracking-wider">Follow up required</div>
+                        <div class="text-sm font-bold text-rose-700">{{ overdue_tenants_count|default:"0" }} Tenants
+                            Overdue</div>
+                        <div class="text-[10px] text-rose-500 uppercase font-bold tracking-wider">Follow up required
+                        </div>
                     </div>
                 </a>
-                
-                <a href="#" class="flex items-center group p-3 rounded-2xl bg-orange-50 hover:bg-orange-100 transition-colors border border-orange-100 cursor-pointer">
-                    <div class="w-10 h-10 rounded-xl bg-white text-orange-500 flex items-center justify-center mr-3 shadow-sm">
+
+                <a href="{% url 'lease_list' %}?filter=expiring"
+                    class="flex items-center group p-3 rounded-2xl bg-orange-50 hover:bg-orange-100 transition-colors border border-orange-100 cursor-pointer">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-white text-orange-500 flex items-center justify-center mr-3 shadow-sm">
                         <i class="fas fa-file-signature"></i>
                     </div>
                     <div class="flex-1">
-                        <div class="text-sm font-bold text-orange-700">{{ expiring_leases_count|default:"0" }} Leases Expiring</div>
+                        <div class="text-sm font-bold text-orange-700">{{ expiring_leases_count|default:"0" }} Leases
+                            Expiring</div>
                         <div class="text-[10px] text-orange-500 uppercase font-bold tracking-wider">Next 30 days</div>
                     </div>
                 </a>
 
-                <a href="#" class="flex items-center group p-3 rounded-2xl bg-amber-50 hover:bg-amber-100 transition-colors border border-amber-100 cursor-pointer">
-                    <div class="w-10 h-10 rounded-xl bg-white text-amber-500 flex items-center justify-center mr-3 shadow-sm">
+                <a href="{% url 'ticket_list' %}?filter=urgent"
+                    class="flex items-center group p-3 rounded-2xl bg-amber-50 hover:bg-amber-100 transition-colors border border-amber-100 cursor-pointer">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-white text-amber-500 flex items-center justify-center mr-3 shadow-sm">
                         <i class="fas fa-tools"></i>
                     </div>
                     <div class="flex-1">
-                        <div class="text-sm font-bold text-amber-700">{{ urgent_tickets_count|default:"0" }} Urgent Tickets</div>
+                        <div class="text-sm font-bold text-amber-700">{{ urgent_tickets_count|default:"0" }} Urgent
+                            Tickets</div>
                         <div class="text-[10px] text-amber-500 uppercase font-bold tracking-wider">Maintenance</div>
                     </div>
                 </a>
 
-                <a href="#" class="flex items-center group p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors border border-slate-200 cursor-pointer">
-                    <div class="w-10 h-10 rounded-xl bg-white text-slate-500 flex items-center justify-center mr-3 shadow-sm">
+                <a href="{% url 'unit_list' %}?filter=long_vacant"
+                    class="flex items-center group p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors border border-slate-200 cursor-pointer">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-white text-slate-500 flex items-center justify-center mr-3 shadow-sm">
                         <i class="fas fa-door-open"></i>
                     </div>
                     <div class="flex-1">
-                        <div class="text-sm font-bold text-slate-700">{{ vacant_units_count|default:"0" }} Vacant Units</div>
-                        <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Ready for lease</div>
+                        <div class="text-sm font-bold text-slate-700">{{ vacant_units_count|default:"0" }} Vacant Units
+                        </div>
+                        <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">30+ days vacant</div>
                     </div>
                 </a>
             </div>
@@ -188,7 +234,8 @@
                 <div class="bg-emerald-50/50 p-6 rounded-3xl border border-emerald-50">
                     <div class="text-emerald-500 mb-2"><i class="fas fa-id-badge text-2xl"></i></div>
                     <div class="text-3xl font-extrabold text-slate-900">{{ currently_checked_in|default:"0" }}</div>
-                    <div class="text-xs font-bold text-emerald-600 uppercase tracking-widest mt-1">Currently Checked In</div>
+                    <div class="text-xs font-bold text-emerald-600 uppercase tracking-widest mt-1">Currently Checked In
+                    </div>
                 </div>
             </div>
         </div>
@@ -199,23 +246,30 @@
                 <h3 class="text-xl font-bold tracking-tight">Quick Actions</h3>
             </div>
             <div class="grid grid-cols-2 gap-3 flex-1">
-                <a href="{% url 'tenant_create' %}" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
-                    <i class="fas fa-user-plus text-indigo-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
+                <a onclick="openModal('tenant-modal')"
+                    class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
+                    <i
+                        class="fas fa-user-plus text-indigo-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="text-xs font-bold">Add Tenant</span>
                 </a>
-                <a href="{% url 'payment_create' %}" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
-                    <i class="fas fa-hand-holding-usd text-emerald-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
+                <a onclick="openModal('payment-modal')"
+                    class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
+                    <i
+                        class="fas fa-hand-holding-usd text-emerald-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="text-xs font-bold">Record Payment</span>
                 </a>
-                <a href="#" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
+                <a onclick="openModal('ticket-modal')"
+                    class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
                     <i class="fas fa-tools text-amber-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="text-xs font-bold">Create Ticket</span>
                 </a>
-                <a href="#" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
+                <a onclick="openModal('expense-modal')"
+                    class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer border border-white/5">
                     <i class="fas fa-receipt text-rose-400 text-xl mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="text-xs font-bold">Add Expense</span>
                 </a>
-                <a href="#" class="col-span-2 bg-indigo-600 hover:bg-indigo-500 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer shadow-lg shadow-indigo-600/20">
+                <a href="javascript:void(0)" onclick="openModal('unit-modal')"
+                    class="col-span-2 bg-indigo-600 hover:bg-indigo-500 transition-colors rounded-xl p-4 flex flex-col items-center justify-center text-center group cursor-pointer shadow-lg shadow-indigo-600/20">
                     <i class="fas fa-home text-white text-xl mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="text-xs font-bold">Add Unit</span>
                 </a>
@@ -225,12 +279,15 @@
 </div>
 {% endblock %}
 <!-- Modals -->
-<div id="modal-container" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+<div id="modal-container"
+    class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <!-- Tenant Modal -->
-    <div id="tenant-modal" class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden hidden transform transition-all scale-95 opacity-0">
+    <div id="tenant-modal"
+        class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden hidden transform transition-all scale-95 opacity-0">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
             <h3 class="text-lg font-bold text-slate-800">Add New Tenant</h3>
-            <button onclick="closeModal('tenant-modal')" class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
+            <button onclick="closeModal('tenant-modal')"
+                class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -239,18 +296,23 @@
                 {% csrf_token %}
                 {{ tenant_form.as_p }}
                 <div class="pt-4 flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('tenant-modal')" class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-lg shadow-indigo-600/30">Save Tenant</button>
+                    <button type="button" onclick="closeModal('tenant-modal')"
+                        class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-lg shadow-indigo-600/30">Save
+                        Tenant</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Payment Modal -->
-    <div id="payment-modal" class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden hidden transform transition-all scale-95 opacity-0">
+    <div id="payment-modal"
+        class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden hidden transform transition-all scale-95 opacity-0">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
             <h3 class="text-lg font-bold text-slate-800">Record Payment</h3>
-            <button onclick="closeModal('payment-modal')" class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
+            <button onclick="closeModal('payment-modal')"
+                class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -259,18 +321,23 @@
                 {% csrf_token %}
                 {{ payment_form.as_p }}
                 <div class="pt-4 flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('payment-modal')" class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-colors shadow-lg shadow-emerald-600/30">Record Payment</button>
+                    <button type="button" onclick="closeModal('payment-modal')"
+                        class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-colors shadow-lg shadow-emerald-600/30">Record
+                        Payment</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Expense Modal -->
-    <div id="expense-modal" class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden hidden transform transition-all scale-95 opacity-0">
+    <div id="expense-modal"
+        class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden hidden transform transition-all scale-95 opacity-0">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
             <h3 class="text-lg font-bold text-slate-800">Add Expense</h3>
-            <button onclick="closeModal('expense-modal')" class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
+            <button onclick="closeModal('expense-modal')"
+                class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -279,18 +346,23 @@
                 {% csrf_token %}
                 {{ expense_form.as_p }}
                 <div class="pt-4 flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('expense-modal')" class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-colors shadow-lg shadow-rose-600/30">Add Expense</button>
+                    <button type="button" onclick="closeModal('expense-modal')"
+                        class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-colors shadow-lg shadow-rose-600/30">Add
+                        Expense</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Ticket Modal -->
-    <div id="ticket-modal" class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden hidden transform transition-all scale-95 opacity-0">
+    <div id="ticket-modal"
+        class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden hidden transform transition-all scale-95 opacity-0">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
             <h3 class="text-lg font-bold text-slate-800">Create Ticket</h3>
-            <button onclick="closeModal('ticket-modal')" class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
+            <button onclick="closeModal('ticket-modal')"
+                class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -299,8 +371,36 @@
                 {% csrf_token %}
                 {{ ticket_form.as_p }}
                 <div class="pt-4 flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('ticket-modal')" class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
-                    <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl transition-colors shadow-lg shadow-amber-600/30">Create Ticket</button>
+                    <button type="button" onclick="closeModal('ticket-modal')"
+                        class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl transition-colors shadow-lg shadow-amber-600/30">Create
+                        Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Unit Modal -->
+    <div id="unit-modal"
+        class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden hidden transform transition-all scale-95 opacity-0">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <h3 class="text-lg font-bold text-slate-800">Add Unit</h3>
+            <button onclick="closeModal('unit-modal')"
+                class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <form action="{% url 'unit_quick_create' %}" method="POST" class="space-y-4">
+                {% csrf_token %}
+                {{ unit_quick_form.as_p }}
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('unit-modal')"
+                        class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-lg shadow-indigo-600/30">Save
+                        Unit</button>
                 </div>
             </form>
         </div>
@@ -312,23 +412,23 @@
     function openModal(modalId) {
         const container = document.getElementById('modal-container');
         const modal = document.getElementById(modalId);
-        
+
         container.classList.remove('hidden');
         modal.classList.remove('hidden');
-        
+
         // Trigger reflow
         void modal.offsetWidth;
-        
+
         modal.classList.remove('scale-95', 'opacity-0');
         modal.classList.add('scale-100', 'opacity-100');
     }
 
     function closeModal(modalId) {
         const modal = document.getElementById(modalId);
-        
+
         modal.classList.remove('scale-100', 'opacity-100');
         modal.classList.add('scale-95', 'opacity-0');
-        
+
         setTimeout(() => {
             modal.classList.add('hidden');
             const modals = document.querySelectorAll('.modal:not(.hidden)');
@@ -339,7 +439,7 @@
     }
 
     // Close on background click
-    document.getElementById('modal-container').addEventListener('click', function(e) {
+    document.getElementById('modal-container').addEventListener('click', function (e) {
         if (e.target === this) {
             const openModals = document.querySelectorAll('.modal:not(.hidden)');
             openModals.forEach(modal => closeModal(modal.id));

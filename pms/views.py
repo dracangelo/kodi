@@ -12,6 +12,7 @@ def dashboard(request):
     first_day_current_month = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     last_day_prev_month = first_day_current_month - timedelta(days=1)
     first_day_prev_month = last_day_prev_month.replace(day=1)
+    thirty_days_ago = today - timedelta(days=30)
 
     # Financials
     total_rent_collected = Payment.objects.aggregate(Sum('amount'))['amount__sum'] or 0
@@ -44,29 +45,32 @@ def dashboard(request):
     total_units = Unit.objects.count()
     occupied_units = Unit.objects.filter(status='occupied').count()
     occupancy_rate = (occupied_units / total_units * 100) if total_units > 0 else 0
-    vacant_units_count = total_units - occupied_units
+    vacant_units_count = Unit.objects.filter(status='vacant', created_at__lte=thirty_days_ago).count()
 
     # Action Alerts
     expiring_leases_count = Lease.objects.filter(
-        status='active', 
+        status='active',
         end_date__lte=today.date() + timedelta(days=30)
     ).count()
-    
-    # Simple overdue logic: active leases with no payment this month
-    overdue_tenants_count = active_leases.exclude(
-        tenant__payments__date__gte=first_day_current_month
-    ).distinct().count()
+
+    # Overdue tenants: past due date with outstanding balance
+    overdue_tenants_count = Tenant.objects.filter(
+        status='active',
+        rent_due_date__lt=today.date(),
+        balance__gt=0
+    ).count()
 
     # Maintenance & Support
     recent_tickets = MaintenanceTicket.objects.order_by('-created_at')[:5]
-    urgent_tickets_count = MaintenanceTicket.objects.filter(priority='emergency', status='open').count()
+    urgent_tickets_count = MaintenanceTicket.objects.filter(
+        priority='high'
+    ).exclude(status='closed').count()
 
     # Visitors
     visitors_today = Visitor.objects.filter(entry_time__date=today.date()).count()
     currently_checked_in = Visitor.objects.filter(exit_time__isnull=True).count()
 
     # Pass empty forms for modals
-    from .views import TenantForm, PaymentForm, ExpenseForm, MaintenanceTicketForm
     context = {
         'total_rent_collected': total_rent_collected,
         'total_expenses': total_expenses,
@@ -91,6 +95,7 @@ def dashboard(request):
         'payment_form': PaymentForm(),
         'expense_form': ExpenseForm(),
         'ticket_form': MaintenanceTicketForm(),
+        'unit_quick_form': UnitQuickForm(),
     }
     return render(request, 'pms/dashboard.html', context)
 
@@ -123,7 +128,8 @@ def property_create(request):
         form = PropertyForm(request.POST)
         if form.is_valid():
             property_obj = form.save(commit=False)
-            property_obj.owner = request.user if request.user.is_authenticated else None # Handle case if user is not logged in for now
+            if request.user.is_authenticated:
+                property_obj.owner = request.user
             property_obj.save()
             return redirect('property_detail', pk=property_obj.pk)
     else:
@@ -145,6 +151,23 @@ class UnitForm(forms.ModelForm):
             'electricity_meter': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
         }
 
+
+class UnitQuickForm(forms.ModelForm):
+    class Meta:
+        model = Unit
+        fields = ['property', 'unit_number', 'unit_type', 'rent_amount', 'deposit_amount', 'status', 'water_meter', 'electricity_meter']
+        widgets = {
+            'property': forms.Select(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'unit_number': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'unit_type': forms.Select(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'rent_amount': forms.NumberInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'deposit_amount': forms.NumberInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'status': forms.Select(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'water_meter': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'electricity_meter': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+        }
+
+
 def unit_create(request, property_pk):
     property_obj = get_object_or_404(Property, pk=property_pk)
     if request.method == 'POST':
@@ -158,9 +181,31 @@ def unit_create(request, property_pk):
         form = UnitForm()
     return render(request, 'pms/unit_form.html', {'form': form, 'property': property_obj})
 
+
+def unit_list(request):
+    units = Unit.objects.select_related('property').all()
+    filter_type = request.GET.get('filter')
+
+    if filter_type == 'long_vacant':
+        today = timezone.now()
+        thirty_days_ago = today - timedelta(days=30)
+        units = units.filter(status='vacant', created_at__lte=thirty_days_ago)
+
+    return render(request, 'pms/unit_list.html', {'units': units})
+
 # Tenant Views
 def tenant_list(request):
     tenants = Tenant.objects.all()
+    filter_type = request.GET.get('filter')
+
+    if filter_type == 'overdue':
+        today = timezone.now().date()
+        tenants = tenants.filter(
+            status='active',
+            rent_due_date__lt=today,
+            balance__gt=0
+        )
+
     return render(request, 'pms/tenant_list.html', {'tenants': tenants})
 
 class TenantForm(forms.ModelForm):
@@ -226,6 +271,17 @@ def lease_create(request):
             }
         form = LeaseForm(initial=initial)
     return render(request, 'pms/lease_form.html', {'form': form})
+
+
+def lease_list(request):
+    leases = Lease.objects.select_related('tenant', 'unit').all()
+    filter_type = request.GET.get('filter')
+
+    if filter_type == 'expiring':
+        today = timezone.now().date()
+        leases = leases.filter(status='active', end_date__lte=today + timedelta(days=30))
+
+    return render(request, 'pms/lease_list.html', {'leases': leases})
 
 # Payment Views
 def payment_list(request):
@@ -311,3 +367,51 @@ def ticket_create(request):
     else:
         form = MaintenanceTicketForm()
     return render(request, 'pms/ticket_form.html', {'form': form})
+
+
+def ticket_list(request):
+    tickets = MaintenanceTicket.objects.select_related('unit', 'tenant').all()
+    filter_type = request.GET.get('filter')
+
+    if filter_type == 'urgent':
+        tickets = tickets.filter(priority='high').exclude(status='closed')
+
+    return render(request, 'pms/ticket_list.html', {'tickets': tickets})
+
+
+def unit_quick_create(request):
+    if request.method == 'POST':
+        form = UnitQuickForm(request.POST)
+        if form.is_valid():
+            form.save()
+    return redirect('dashboard')
+
+
+def visitor_list(request):
+    visitors = Visitor.objects.select_related('unit_visiting').order_by('-entry_time')
+    return render(request, 'pms/visitor_list.html', {'visitors': visitors})
+
+
+class VisitorForm(forms.ModelForm):
+    class Meta:
+        model = Visitor
+        fields = ['name', 'phone', 'id_number', 'unit_visiting', 'vehicle_plate', 'security_guard_name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'phone': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'id_number': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'unit_visiting': forms.Select(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'vehicle_plate': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'security_guard_name': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+        }
+
+
+def visitor_create(request):
+    if request.method == 'POST':
+        form = VisitorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('visitor_list')
+    else:
+        form = VisitorForm()
+    return render(request, 'pms/visitor_form.html', {'form': form})
