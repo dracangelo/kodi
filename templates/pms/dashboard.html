@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Kodi{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-800">Financial Overview</h2>
+        <div class="flex space-x-2">
+            <span class="px-3 py-1 bg-white rounded-full shadow-sm text-xs font-medium text-gray-500">Last 30 Days</span>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="glass p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-500 uppercase">Rent Collected</span>
+                <i class="fas fa-hand-holding-usd text-blue-500"></i>
+            </div>
+            <div class="text-2xl font-bold text-gray-900">${{ total_rent_collected|default:"0.00" }}</div>
+            <div class="text-xs text-green-500 mt-2 flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i> 12% from last month
+            </div>
+        </div>
+
+        <div class="glass p-6 rounded-2xl shadow-sm border-l-4 border-red-500">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-500 uppercase">Total Expenses</span>
+                <i class="fas fa-file-invoice text-red-500"></i>
+            </div>
+            <div class="text-2xl font-bold text-gray-900">${{ total_expenses|default:"0.00" }}</div>
+            <div class="text-xs text-red-500 mt-2 flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i> 5% from last month
+            </div>
+        </div>
+
+        <div class="glass p-6 rounded-2xl shadow-sm border-l-4 border-green-500">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-500 uppercase">Net Income</span>
+                <i class="fas fa-wallet text-green-500"></i>
+            </div>
+            <div class="text-2xl font-bold text-gray-900">${{ net_income|default:"0.00" }}</div>
+            <div class="text-xs text-green-500 mt-2 flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i> 8% from last month
+            </div>
+        </div>
+
+        <div class="glass p-6 rounded-2xl shadow-sm border-l-4 border-yellow-500">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-500 uppercase">Outstanding Rent</span>
+                <i class="fas fa-clock text-yellow-500"></i>
+            </div>
+            <div class="text-2xl font-bold text-gray-900">${{ outstanding_rent|default:"0.00" }}</div>
+            <div class="text-xs text-yellow-500 mt-2 flex items-center">
+                <i class="fas fa-exclamation-triangle mr-1"></i> 3 Overdue Tenants
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Property Status -->
+        <div class="lg:col-span-2 glass p-6 rounded-2xl shadow-sm">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">Property Performance</h3>
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-medium text-gray-500 uppercase">Occupancy Rate</div>
+                        <div class="text-3xl font-bold text-gray-900">{{ occupancy_rate|default:"0" }}%</div>
+                    </div>
+                    <div class="w-48 bg-gray-200 rounded-full h-4">
+                        <div class="bg-blue-600 h-4 rounded-full" style="width: {{ occupancy_rate|default:"0" }}%"></div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 border-t pt-6 text-center">
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase">Total Properties</div>
+                        <div class="text-xl font-bold">{{ total_properties|default:"0" }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase">Total Units</div>
+                        <div class="text-xl font-bold">{{ total_units|default:"0" }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase">Occupied</div>
+                        <div class="text-xl font-bold">{{ occupied_units|default:"0" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Maintenance -->
+        <div class="glass p-6 rounded-2xl shadow-sm">
+            <h3 class="text-xl font-bold text-gray-800 mb-6 flex justify-between items-center">
+                Maintenance
+                <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">{{ urgent_tickets_count|default:"0" }} Urgent</span>
+            </h3>
+            <div class="space-y-4">
+                {% for ticket in recent_tickets %}
+                <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-white/50 transition-all border border-transparent hover:border-gray-100">
+                    <div class="w-2 h-2 rounded-full mt-2 {% if ticket.priority == 'emergency' %}bg-red-500{% elif ticket.priority == 'high' %}bg-orange-500{% else %}bg-blue-500{% endif %}"></div>
+                    <div>
+                        <div class="text-sm font-bold text-gray-800">{{ ticket.category }}</div>
+                        <div class="text-xs text-gray-500">{{ ticket.unit.unit_number }} - {{ ticket.created_at|timesince }} ago</div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-sm text-gray-500 italic text-center py-8">No open tickets.</div>
+                {% endfor %}
+            </div>
+            <a href="#" class="block w-full text-center mt-6 text-sm font-bold text-blue-600 hover:text-blue-700">View All Tickets</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

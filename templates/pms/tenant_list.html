@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Tenants - Kodi{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-800">Tenants</h2>
+        <a href="{% url 'tenant_create' %}"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold transition-all flex items-center">
+            <i class="fas fa-user-plus mr-2"></i> Add Tenant
+        </a>
+    </div>
+
+    <div class="glass shadow-sm rounded-2xl overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-bold">
+                <tr>
+                    <th class="px-6 py-4">Name</th>
+                    <th class="px-6 py-4">Contact</th>
+                    <th class="px-6 py-4">ID / Passport</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for tenant in tenants %}
+                <tr class="hover:bg-gray-50 transition-all">
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-gray-800">{{ tenant.first_name }} {{ tenant.last_name }}</div>
+                        <div class="text-xs text-gray-400">{{ tenant.email }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-gray-600">{{ tenant.phone }}</td>
+                    <td class="px-6 py-4 text-gray-600">{{ tenant.id_passport_number }}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase 
+                            {% if tenant.status == 'active' %}bg-green-100 text-green-600
+                            {% elif tenant.status == 'past' %}bg-gray-100 text-gray-600
+                            {% else %}bg-red-100 text-red-600{% endif %}">
+                            {{ tenant.status }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex space-x-2">
+                            <a href="#" class="text-gray-400 hover:text-blue-600"><i class="fas fa-edit"></i></a>
+                            <a href="{% url 'lease_create' %}?tenant={{ tenant.pk }}"
+                                class="text-gray-400 hover:text-green-600" title="Create Lease"><i
+                                    class="fas fa-file-contract"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-6 py-12 text-center text-gray-400 italic">
+                        No tenants registered yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

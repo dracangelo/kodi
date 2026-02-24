@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kodi - Property Management{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 glass shadow-xl z-20 overflow-y-auto flex-shrink-0">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-blue-600 flex items-center">
+                    <i class="fas fa-building mr-2"></i> KODI
+                </h1>
+            </div>
+            <nav class="mt-4 px-4 space-y-1">
+                <a href="{% url 'dashboard' %}"
+                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-50 text-blue-600{% endif %}">
+                    <i class="fas fa-tachometer-alt w-6"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'property_list' %}"
+                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all {% if request.resolver_match.url_name == 'property_list' %}bg-blue-50 text-blue-600{% endif %}">
+                    <i class="fas fa-city w-6"></i>
+                    <span>Properties</span>
+                </a>
+                <a href="{% url 'tenant_list' %}"
+                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all {% if request.resolver_match.url_name == 'tenant_list' %}bg-blue-50 text-blue-600{% endif %}">
+                    <i class="fas fa-users w-6"></i>
+                    <span>Tenants</span>
+                </a>
+                <a href="{% url 'payment_list' %}"
+                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all {% if request.resolver_match.url_name == 'payment_list' %}bg-blue-50 text-blue-600{% endif %}">
+                    <i class="fas fa-file-invoice-dollar w-6"></i>
+                    <span>Payments</span>
+                </a>
+                <a href="#"
+                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all">
+                    <i class="fas fa-tools w-6"></i>
+                    <span>Maintenance</span>
+                </a>
+                <a href="#"
+                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all">
+                    <i class="fas fa-chart-line w-6"></i>
+                    <span>Reports</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="glass h-16 flex items-center justify-between px-8 shadow-sm z-10">
+                <div class="flex items-center text-gray-500">
+                    <i class="fas fa-search mr-3"></i>
+                    <input type="text" placeholder="Search..." class="bg-transparent border-none focus:ring-0 text-sm">
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="relative p-2 text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-bell"></i>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                            <i class="fas fa-user text-xs"></i>
+                        </div>
+                        <span class="text-sm font-medium">{{ user.username }}</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-8 bg-gray-50/50">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>
