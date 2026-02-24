@@ -3,6 +3,7 @@ from django.db.models import Sum, Count, Q
 from .models import Property, Unit, Tenant, Lease, Payment, Expense, MaintenanceTicket, Visitor
 from django import forms
 
+
 from django.utils import timezone
 from datetime import timedelta
 
@@ -64,6 +65,8 @@ def dashboard(request):
     visitors_today = Visitor.objects.filter(entry_time__date=today.date()).count()
     currently_checked_in = Visitor.objects.filter(exit_time__isnull=True).count()
 
+    # Pass empty forms for modals
+    from .views import TenantForm, PaymentForm, ExpenseForm, MaintenanceTicketForm
     context = {
         'total_rent_collected': total_rent_collected,
         'total_expenses': total_expenses,
@@ -84,6 +87,10 @@ def dashboard(request):
         'overdue_tenants_count': overdue_tenants_count,
         'visitors_today': visitors_today,
         'currently_checked_in': currently_checked_in,
+        'tenant_form': TenantForm(),
+        'payment_form': PaymentForm(),
+        'expense_form': ExpenseForm(),
+        'ticket_form': MaintenanceTicketForm(),
     }
     return render(request, 'pms/dashboard.html', context)
 
@@ -257,3 +264,50 @@ def payment_create(request):
                 initial['amount'] = active_lease.monthly_rent
         form = PaymentForm(initial=initial)
     return render(request, 'pms/payment_form.html', {'form': form})
+
+# Expense Forms
+class ExpenseForm(forms.ModelForm):
+    class Meta:
+        model = Expense
+        fields = ['property', 'category', 'amount', 'date', 'description']
+        widgets = {
+            'property': forms.Select(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'category': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'amount': forms.NumberInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'date': forms.DateInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500', 'type': 'date'}),
+            'description': forms.Textarea(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500', 'rows': 2}),
+        }
+
+# Maintenance Forms
+class MaintenanceTicketForm(forms.ModelForm):
+    class Meta:
+        model = MaintenanceTicket
+        fields = ['tenant', 'unit', 'category', 'description', 'priority']
+        widgets = {
+            'tenant': forms.Select(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'unit': forms.Select(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'category': forms.TextInput(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+            'description': forms.Textarea(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500', 'rows': 3}),
+            'priority': forms.Select(attrs={'class': 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500'}),
+        }
+
+
+def expense_create(request):
+    if request.method == 'POST':
+        form = ExpenseForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = ExpenseForm()
+    return render(request, 'pms/expense_form.html', {'form': form})
+
+def ticket_create(request):
+    if request.method == 'POST':
+        form = MaintenanceTicketForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = MaintenanceTicketForm()
+    return render(request, 'pms/ticket_form.html', {'form': form})

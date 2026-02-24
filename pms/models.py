@@ -40,6 +40,11 @@ class Unit(models.Model):
     electricity_meter = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['status']),
+        ]
+
     def __str__(self):
         return f"{self.property.name} - {self.unit_number}"
 
@@ -58,7 +63,14 @@ class Tenant(models.Model):
     emergency_contact = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     notes = models.TextField(blank=True)
+    rent_due_date = models.DateField(null=True, blank=True)
+    balance = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['rent_due_date']),
+        ]
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -78,6 +90,11 @@ class Lease(models.Model):
     payment_frequency = models.CharField(max_length=50, default='Monthly')
     lease_agreement = models.FileField(upload_to='leases/', blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['end_date']),
+        ]
 
     def __str__(self):
         return f"Lease: {self.tenant} at {self.unit}"
@@ -100,6 +117,11 @@ class Payment(models.Model):
     method = models.CharField(max_length=10, choices=METHOD_CHOICES)
     receipt_number = models.CharField(max_length=100, unique=True)
     notes = models.TextField(blank=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['date']),
+        ]
 
     def __str__(self):
         return f"Payment {self.receipt_number} - {self.amount}"
