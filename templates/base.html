@@ -6,87 +6,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Kodi - Property Management{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        .sidebar-link:hover {
-            background: rgba(59, 130, 246, 0.1);
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-gradient {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .active-link {
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.1) 0%, rgba(79, 70, 229, 0) 100%);
+            border-left: 4px solid #4f46e5;
+        }
+
+        .hover-lift {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #cbd5e1;
         }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-[#f8fafc] text-slate-900 overflow-hidden">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-64 glass shadow-xl z-20 overflow-y-auto flex-shrink-0">
-            <div class="p-6">
-                <h1 class="text-2xl font-bold text-blue-600 flex items-center">
-                    <i class="fas fa-building mr-2"></i> KODI
-                </h1>
+        <aside class="w-72 sidebar-gradient text-slate-300 z-30 flex flex-col shadow-2xl">
+            <div class="p-8">
+                <div class="flex items-center space-x-3 group">
+                    <div
+                        class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-building text-lg"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-white tracking-tight">KODI</h1>
+                </div>
             </div>
-            <nav class="mt-4 px-4 space-y-1">
+
+            <div class="flex-1 px-4 space-y-1 overflow-y-auto">
+                <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Main Menu</p>
                 <a href="{% url 'dashboard' %}"
-                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-50 text-blue-600{% endif %}">
-                    <i class="fas fa-tachometer-alt w-6"></i>
-                    <span>Dashboard</span>
+                    class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all hover:text-white hover:bg-white/5 {% if request.resolver_match.url_name == 'dashboard' %}active-link text-white bg-white/5{% endif %}">
+                    <i class="fas fa-grid-2 text-sm w-5"></i>
+                    <span class="font-medium">Overview</span>
                 </a>
                 <a href="{% url 'property_list' %}"
-                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all {% if request.resolver_match.url_name == 'property_list' %}bg-blue-50 text-blue-600{% endif %}">
-                    <i class="fas fa-city w-6"></i>
-                    <span>Properties</span>
+                    class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all hover:text-white hover:bg-white/5 {% if request.resolver_match.url_name == 'property_list' %}active-link text-white bg-white/5{% endif %}">
+                    <i class="fas fa-city text-sm w-5"></i>
+                    <span class="font-medium">Properties</span>
                 </a>
                 <a href="{% url 'tenant_list' %}"
-                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all {% if request.resolver_match.url_name == 'tenant_list' %}bg-blue-50 text-blue-600{% endif %}">
-                    <i class="fas fa-users w-6"></i>
-                    <span>Tenants</span>
+                    class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all hover:text-white hover:bg-white/5 {% if request.resolver_match.url_name == 'tenant_list' %}active-link text-white bg-white/5{% endif %}">
+                    <i class="fas fa-users text-sm w-5"></i>
+                    <span class="font-medium">Tenants</span>
                 </a>
                 <a href="{% url 'payment_list' %}"
-                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all {% if request.resolver_match.url_name == 'payment_list' %}bg-blue-50 text-blue-600{% endif %}">
-                    <i class="fas fa-file-invoice-dollar w-6"></i>
-                    <span>Payments</span>
+                    class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all hover:text-white hover:bg-white/5 {% if request.resolver_match.url_name == 'payment_list' %}active-link text-white bg-white/5{% endif %}">
+                    <i class="fas fa-wallet text-sm w-5"></i>
+                    <span class="font-medium">Payments</span>
+                </a>
+
+                <p class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-8 mb-4">Operations</p>
+                <a href="#"
+                    class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all hover:text-white hover:bg-white/5">
+                    <i class="fas fa-screwdriver-wrench text-sm w-5"></i>
+                    <span class="font-medium">Maintenance</span>
                 </a>
                 <a href="#"
-                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all">
-                    <i class="fas fa-tools w-6"></i>
-                    <span>Maintenance</span>
+                    class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-all hover:text-white hover:bg-white/5">
+                    <i class="fas fa-chart-pie text-sm w-5"></i>
+                    <span class="font-medium">Statistics</span>
                 </a>
-                <a href="#"
-                    class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 font-medium transition-all">
-                    <i class="fas fa-chart-line w-6"></i>
-                    <span>Reports</span>
-                </a>
-            </nav>
+            </div>
+
+            <div class="p-6 bg-slate-900/50">
+                <div class="flex items-center space-x-3 p-3 rounded-2xl bg-white/5 ring-1 ring-white/10">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <div class="flex-1 overflow-hidden">
+                        <p class="text-sm font-bold text-white truncate">{{ user.username }}</p>
+                        <p class="text-xs text-slate-500 truncate">Administrator</p>
+                    </div>
+                </div>
+            </div>
         </aside>
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Header -->
-            <header class="glass h-16 flex items-center justify-between px-8 shadow-sm z-10">
-                <div class="flex items-center text-gray-500">
-                    <i class="fas fa-search mr-3"></i>
-                    <input type="text" placeholder="Search..." class="bg-transparent border-none focus:ring-0 text-sm">
+            <header
+                class="h-20 flex items-center justify-between px-10 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-20">
+                <div
+                    class="flex items-center w-96 bg-slate-100 rounded-2xl px-4 py-2 ring-1 ring-slate-200/50 focus-within:ring-indigo-500/50 transition-all">
+                    <i class="fas fa-search text-slate-400 mr-3"></i>
+                    <input type="text" placeholder="Search anything..."
+                        class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-400">
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button class="relative p-2 text-gray-400 hover:text-gray-600">
+                <div class="flex items-center space-x-6">
+                    <button
+                        class="relative w-10 h-10 flex items-center justify-center text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
                         <i class="fas fa-bell"></i>
-                        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
                     </button>
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
-                            <i class="fas fa-user text-xs"></i>
-                        </div>
-                        <span class="text-sm font-medium">{{ user.username }}</span>
-                    </div>
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    <button
+                        class="px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all">
+                        New Action
+                    </button>
                 </div>
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 overflow-y-auto p-8 bg-gray-50/50">
+            <main class="flex-1 overflow-y-auto px-10 py-10">
                 {% block content %}{% endblock %}
             </main>
         </div>

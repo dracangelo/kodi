@@ -3,33 +3,87 @@ from django.db.models import Sum, Count, Q
 from .models import Property, Unit, Tenant, Lease, Payment, Expense, MaintenanceTicket
 from django import forms
 
+from django.utils import timezone
+from datetime import timedelta
+
 def dashboard(request):
+    today = timezone.now()
+    first_day_current_month = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    last_day_prev_month = first_day_current_month - timedelta(days=1)
+    first_day_prev_month = last_day_prev_month.replace(day=1)
+
+    # Financials
     total_rent_collected = Payment.objects.aggregate(Sum('amount'))['amount__sum'] or 0
     total_expenses = Expense.objects.aggregate(Sum('amount'))['amount__sum'] or 0
     net_income = total_rent_collected - total_expenses
+
+    # Monthly Trends
+    curr_month_revenue = Payment.objects.filter(date__gte=first_day_current_month).aggregate(Sum('amount'))['amount__sum'] or 0
+    prev_month_revenue = Payment.objects.filter(date__gte=first_day_prev_month, date__lt=first_day_current_month).aggregate(Sum('amount'))['amount__sum'] or 0
     
-    # Outstanding rent (placeholder for now, needs logic to find unpaid bills)
-    outstanding_rent = 0
+    curr_month_expenses = Expense.objects.filter(date__gte=first_day_current_month.date()).aggregate(Sum('amount'))['amount__sum'] or 0
+    prev_month_expenses = Expense.objects.filter(date__gte=first_day_prev_month.date(), date__lt=first_day_current_month.date()).aggregate(Sum('amount'))['amount__sum'] or 0
     
+    curr_net_profit = curr_month_revenue - curr_month_expenses
+    prev_net_profit = prev_month_revenue - prev_month_expenses
+    
+    profit_trend = 0
+    if prev_net_profit > 0:
+        profit_trend = ((curr_net_profit - prev_net_profit) / prev_net_profit) * 100
+    elif curr_net_profit > 0:
+        profit_trend = 100
+
+    # Outstanding Rent (Current Month)
+    active_leases = Lease.objects.filter(status='active')
+    total_expected_rent = active_leases.aggregate(Sum('monthly_rent'))['monthly_rent__sum'] or 0
+    outstanding_rent = max(0, total_expected_rent - curr_month_revenue)
+
+    # Property Stats
     total_properties = Property.objects.count()
     total_units = Unit.objects.count()
     occupied_units = Unit.objects.filter(status='occupied').count()
     occupancy_rate = (occupied_units / total_units * 100) if total_units > 0 else 0
+    vacant_units_count = total_units - occupied_units
+
+    # Action Alerts
+    expiring_leases_count = Lease.objects.filter(
+        status='active', 
+        end_date__lte=today.date() + timedelta(days=30)
+    ).count()
     
+    # Simple overdue logic: active leases with no payment this month
+    overdue_tenants_count = active_leases.exclude(
+        tenant__payments__date__gte=first_day_current_month
+    ).distinct().count()
+
+    # Maintenance & Support
     recent_tickets = MaintenanceTicket.objects.order_by('-created_at')[:5]
     urgent_tickets_count = MaintenanceTicket.objects.filter(priority='emergency', status='open').count()
+
+    # Visitors
+    visitors_today = Visitor.objects.filter(entry_time__date=today.date()).count()
+    currently_checked_in = Visitor.objects.filter(exit_time__isnull=True).count()
 
     context = {
         'total_rent_collected': total_rent_collected,
         'total_expenses': total_expenses,
         'net_income': net_income,
+        'curr_month_revenue': curr_month_revenue,
+        'curr_month_expenses': curr_month_expenses,
+        'curr_net_profit': curr_net_profit,
+        'profit_trend': round(profit_trend, 1),
         'outstanding_rent': outstanding_rent,
         'total_properties': total_properties,
         'total_units': total_units,
         'occupied_units': occupied_units,
         'occupancy_rate': round(occupancy_rate, 1),
+        'vacant_units_count': vacant_units_count,
         'recent_tickets': recent_tickets,
         'urgent_tickets_count': urgent_tickets_count,
+        'expiring_leases_count': expiring_leases_count,
+        'overdue_tenants_count': overdue_tenants_count,
+        'visitors_today': visitors_today,
+        'currently_checked_in': currently_checked_in,
     }
     return render(request, 'pms/dashboard.html', context)
 
